@@ -40,8 +40,8 @@
     background-image: url("images/20260514_174529.jpg");
     background-size: cover;
     background-position: center;
-    filter: saturate(0.85) brightness(0.95) blur(6px);
-    transform: scale(1.05); /* blur 가장자리 보정 */
+    filter: saturate(0.95) brightness(1) blur(2px);
+    transform: scale(1.03); /* blur 가장자리 보정 */
   }
   .bg::after {
     content: "";
@@ -49,8 +49,8 @@
     inset: 0;
     z-index: -1;
     background:
-      radial-gradient(ellipse at center, rgba(251, 245, 234, 0.45) 0%, rgba(251, 245, 234, 0.78) 70%, rgba(251, 245, 234, 0.92) 100%),
-      linear-gradient(180deg, rgba(251, 245, 234, 0.5) 0%, rgba(251, 245, 234, 0.88) 100%);
+      radial-gradient(ellipse at center, rgba(251, 245, 234, 0.25) 0%, rgba(251, 245, 234, 0.6) 70%, rgba(251, 245, 234, 0.82) 100%),
+      linear-gradient(180deg, rgba(251, 245, 234, 0.3) 0%, rgba(251, 245, 234, 0.75) 100%);
   }
 
   /* ===== BGM 토글 ===== */
@@ -217,7 +217,7 @@
   /* ===== 모바일 ===== */
   @media (max-width: 768px) {
     /* 모바일에서는 blur 강도를 약간 낮춰 성능 보정 */
-    .bg { filter: saturate(0.85) brightness(0.95) blur(4px); }
+    .bg { filter: saturate(0.95) brightness(1) blur(1.5px); }
   }
   @media (max-width: 600px) {
     body { line-height: 1.85; }
