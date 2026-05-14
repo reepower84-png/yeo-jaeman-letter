@@ -35,21 +35,22 @@
   /* ===== 배경 ===== */
   .bg {
     position: fixed;
-    inset: 0;
+    inset: -20px; /* blur 가장자리 잘림 방지 */
     z-index: -2;
-    background-image: url("bg.jpg"); /* 배경사진 파일명: bg.jpg (같은 폴더에 두세요) */
+    background-image: url("images/20260514_174529.jpg");
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
-    filter: saturate(0.9) brightness(0.95);
+    filter: saturate(0.85) brightness(0.95) blur(6px);
+    transform: scale(1.05); /* blur 가장자리 보정 */
   }
   .bg::after {
     content: "";
-    position: absolute;
+    position: fixed;
     inset: 0;
+    z-index: -1;
     background:
-      radial-gradient(ellipse at center, rgba(251, 245, 234, 0.35) 0%, rgba(251, 245, 234, 0.75) 70%, rgba(251, 245, 234, 0.92) 100%),
-      linear-gradient(180deg, rgba(251, 245, 234, 0.4) 0%, rgba(251, 245, 234, 0.85) 100%);
+      radial-gradient(ellipse at center, rgba(251, 245, 234, 0.45) 0%, rgba(251, 245, 234, 0.78) 70%, rgba(251, 245, 234, 0.92) 100%),
+      linear-gradient(180deg, rgba(251, 245, 234, 0.5) 0%, rgba(251, 245, 234, 0.88) 100%);
   }
 
   /* ===== BGM 토글 ===== */
@@ -215,8 +216,8 @@
 
   /* ===== 모바일 ===== */
   @media (max-width: 768px) {
-    /* iOS Safari에서 fixed attachment가 깨지므로 일반 스크롤로 전환 */
-    .bg { background-attachment: scroll; }
+    /* 모바일에서는 blur 강도를 약간 낮춰 성능 보정 */
+    .bg { filter: saturate(0.85) brightness(0.95) blur(4px); }
   }
   @media (max-width: 600px) {
     body { line-height: 1.85; }
