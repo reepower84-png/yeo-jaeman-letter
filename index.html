@@ -409,14 +409,25 @@
     }
   });
 
-  // 최초 1회 사용자 상호작용 시 자동 재생 시도 (브라우저 정책 우회)
+  // 페이지 로드 즉시 자동 재생 시도 (대부분 브라우저에서 차단됨 — 무음 재생으로 우회)
+  const tryAutoplay = () => bgm.play().then(() => setUI(true)).catch(() => {});
+  tryAutoplay();
+
+  // 차단 시: 어떤 형태든 첫 사용자 상호작용이 발생하면 즉시 재생
+  // (PC에서는 스크롤만 기다리면 늦으므로 마우스 이동/휠/키 입력 등도 함께 감지)
+  const interactionEvents = [
+    "pointerdown", "pointermove", "mousedown", "mousemove",
+    "wheel", "keydown", "touchstart", "scroll"
+  ];
   const autoPlayOnce = () => {
-    bgm.play().then(() => setUI(true)).catch(() => {});
-    window.removeEventListener("scroll", autoPlayOnce);
-    window.removeEventListener("click", autoPlayOnce);
+    if (bgm.paused) bgm.play().then(() => setUI(true)).catch(() => {});
+    interactionEvents.forEach((ev) =>
+      window.removeEventListener(ev, autoPlayOnce, { capture: true })
+    );
   };
-  window.addEventListener("scroll", autoPlayOnce, { once: true });
-  window.addEventListener("click", autoPlayOnce, { once: true });
+  interactionEvents.forEach((ev) =>
+    window.addEventListener(ev, autoPlayOnce, { once: true, capture: true, passive: true })
+  );
 </script>
 
 </body>
