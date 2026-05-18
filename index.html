@@ -64,6 +64,29 @@
   body.letter1 .view-letter1,
   body.letter2 .view-letter2 { display: block; }
 
+  /* 편지 진입 시 부드럽게 떠오르는 트랜지션 (PC·모바일 공통) */
+  @keyframes viewEnter {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  body.letter1 .view-letter1,
+  body.letter2 .view-letter2 {
+    animation: viewEnter 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  /* 모션 최소화 선호 사용자는 즉시 표시 */
+  @media (prefers-reduced-motion: reduce) {
+    body.letter1 .view-letter1,
+    body.letter2 .view-letter2 {
+      animation: none;
+    }
+  }
+
   /* ===== 뒤로가기 ===== */
   .back-btn {
     position: fixed;
