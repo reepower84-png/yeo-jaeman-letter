@@ -170,18 +170,17 @@
   .letter-list {
     display: flex;
     gap: 1.4rem;
-    margin-top: 1.4rem;
+    margin: 1.4rem auto 0;        /* 좌우 auto — 카드 그룹을 폭에 맞춰 중앙 정렬 */
     flex-wrap: wrap;
     justify-content: center;
-    width: 100%;
-    max-width: 640px;
+    align-items: stretch;
+    width: fit-content;            /* 그룹 폭을 내용에 맞춰 좁힘 */
+    max-width: 100%;
     opacity: 0;
     animation: fadeUp 1.8s ease 2.4s forwards;
   }
   .letter-card {
-    flex: 1 1 240px;
-    min-width: 240px;
-    max-width: 290px;
+    flex: 0 0 240px;               /* 240px 고정 — 늘어나거나 줄지 않음 */
     background: rgba(251, 245, 234, 0.92);
     border: 1px solid rgba(185, 122, 58, 0.35);
     border-radius: 12px;
@@ -338,7 +337,7 @@
     }
     .pull { margin: 1.8rem 0; padding-left: 1rem; }
     .letter-list { gap: 1rem; margin-top: 1rem; }
-    .letter-card { padding: 1.5rem 1.4rem; min-width: 220px; }
+    .letter-card { padding: 1.5rem 1.4rem; flex-basis: 220px; }
     .letter-card .label { font-size: 1.1rem; }
     .cover .divider { height: 48px; margin: 2rem 0 0.8rem; }
   }
@@ -346,11 +345,9 @@
     .cover h1 { font-size: 2.2rem; }
     .letter p { font-size: 1.05rem; }
     .letter-card {
-      min-width: 0;                /* 240/220px 제약 해제 — 부모 폭에 맞춰 축소 */
+      flex-basis: 100%;            /* 매우 좁은 화면에선 1열 전체폭 */
       max-width: 100%;
-      flex-basis: 100%;
     }
-    .letter-list { max-width: 100%; }
   }
 
   /* ===== 가로모드(낮은 뷰포트 높이) ===== */
@@ -361,7 +358,7 @@
     .cover .subtitle { font-size: 0.95rem; }
     .cover .divider { height: 28px; margin: 0.8rem 0 0.4rem; }
     .letter-list { margin-top: 0.6rem; gap: 0.8rem; }
-    .letter-card { padding: 1rem 1.2rem; min-width: 200px; }
+    .letter-card { padding: 1rem 1.2rem; flex-basis: 200px; }
     .letter-card .num { font-size: 1.3rem; margin-bottom: 0.3rem; }
     .letter-card .label { font-size: 1rem; margin-bottom: 0.2rem; }
     .letter-card .arrow { margin-top: 0.5rem; font-size: 0.95rem; }
@@ -625,6 +622,52 @@
 </footer>
 
 <script>
+  // ===== BGM 초기화 =====
+  const bgm = document.getElementById("bgm");
+  const bgmBtn = document.getElementById("bgmToggle");
+  const iconMuted = document.getElementById("iconMuted");
+  const iconPlaying = document.getElementById("iconPlaying");
+
+  bgm.volume = 0.35;
+
+  function setBgmUI(playing) {
+    iconMuted.style.display   = playing ? "none"  : "block";
+    iconPlaying.style.display = playing ? "block" : "none";
+    bgmBtn.classList.toggle("playing", playing);
+  }
+
+  function playBgm() {
+    if (!bgm.paused) return;
+    bgm.play().then(() => setBgmUI(true)).catch(() => {});
+  }
+
+  bgmBtn.addEventListener("click", () => {
+    if (bgm.paused) {
+      bgm.play().then(() => setBgmUI(true)).catch(() => setBgmUI(false));
+    } else {
+      bgm.pause();
+      setBgmUI(false);
+    }
+  });
+
+  // 페이지 로드 즉시 자동재생 시도 (대부분 브라우저에서 차단됨)
+  playBgm();
+
+  // 첫 사용자 상호작용 시 즉시 재생
+  const interactionEvents = [
+    "pointerdown", "pointermove", "mousedown", "mousemove",
+    "wheel", "keydown", "touchstart", "scroll"
+  ];
+  const autoPlayOnce = () => {
+    playBgm();
+    interactionEvents.forEach((ev) =>
+      window.removeEventListener(ev, autoPlayOnce, { capture: true })
+    );
+  };
+  interactionEvents.forEach((ev) =>
+    window.addEventListener(ev, autoPlayOnce, { once: true, capture: true, passive: true })
+  );
+
   // ===== 뷰 전환 =====
   const body = document.body;
   const backBtn = document.getElementById("backBtn");
@@ -662,6 +705,8 @@
 
     if (name === "letter1" || name === "letter2") {
       setupReveals(name);
+      // 편지 진입 시 BGM 보장 (사용자 클릭/팝스테이트 모두 사용자 제스처로 간주됨)
+      playBgm();
     }
 
     if (!opts.fromPopState) {
@@ -673,7 +718,10 @@
   }
 
   document.querySelectorAll(".letter-card").forEach((card) => {
-    card.addEventListener("click", () => showView(card.dataset.target));
+    card.addEventListener("click", () => {
+      playBgm();                          // 카드 클릭은 항상 사용자 제스처 — 자동재생 정책 통과
+      showView(card.dataset.target);
+    });
   });
 
   backBtn.addEventListener("click", () => showView("home"));
@@ -690,48 +738,6 @@
       showView(hash, { fromPopState: true });
     }
   })();
-
-  // ===== BGM 토글 =====
-  const bgm = document.getElementById("bgm");
-  const btn = document.getElementById("bgmToggle");
-  const iconMuted = document.getElementById("iconMuted");
-  const iconPlaying = document.getElementById("iconPlaying");
-
-  bgm.volume = 0.35;
-
-  function setUI(playing) {
-    iconMuted.style.display   = playing ? "none"  : "block";
-    iconPlaying.style.display = playing ? "block" : "none";
-    btn.classList.toggle("playing", playing);
-  }
-
-  btn.addEventListener("click", () => {
-    if (bgm.paused) {
-      bgm.play().then(() => setUI(true)).catch(() => setUI(false));
-    } else {
-      bgm.pause();
-      setUI(false);
-    }
-  });
-
-  // 페이지 로드 즉시 자동 재생 시도 (대부분 브라우저에서 차단됨)
-  const tryAutoplay = () => bgm.play().then(() => setUI(true)).catch(() => {});
-  tryAutoplay();
-
-  // 첫 사용자 상호작용 시 즉시 재생
-  const interactionEvents = [
-    "pointerdown", "pointermove", "mousedown", "mousemove",
-    "wheel", "keydown", "touchstart", "scroll"
-  ];
-  const autoPlayOnce = () => {
-    if (bgm.paused) bgm.play().then(() => setUI(true)).catch(() => {});
-    interactionEvents.forEach((ev) =>
-      window.removeEventListener(ev, autoPlayOnce, { capture: true })
-    );
-  };
-  interactionEvents.forEach((ev) =>
-    window.addEventListener(ev, autoPlayOnce, { once: true, capture: true, passive: true })
-  );
 </script>
 
 </body>
