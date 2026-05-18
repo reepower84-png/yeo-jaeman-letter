@@ -623,12 +623,21 @@
 
 <script>
   // ===== BGM 초기화 =====
+  // 편지별 BGM 분기
+  //  - 편지 1: "Nostalgic Piano" (bgm.mp3) — 향수 어린 피아노
+  //  - 편지 2: "Piano Reflections" by Ahjay Stelino (bgm2.mp3, Mixkit Free License) — 잔잔하고 감동적인 피아노
+  const BGM_TRACKS = {
+    letter1: "bgm.mp3",
+    letter2: "bgm2.mp3"
+  };
+
   const bgm = document.getElementById("bgm");
   const bgmBtn = document.getElementById("bgmToggle");
   const iconMuted = document.getElementById("iconMuted");
   const iconPlaying = document.getElementById("iconPlaying");
 
   bgm.volume = 0.35;
+  let currentBgmSrc = "bgm.mp3";   // HTML 기본 <source>와 일치
 
   function setBgmUI(playing) {
     iconMuted.style.display   = playing ? "none"  : "block";
@@ -639,6 +648,21 @@
   function playBgm() {
     if (!bgm.paused) return;
     bgm.play().then(() => setBgmUI(true)).catch(() => {});
+  }
+
+  // 편지 뷰에 맞는 트랙으로 교체 후 재생
+  function playBgmForView(viewName) {
+    const desired = BGM_TRACKS[viewName];
+    if (!desired) return;                  // 홈 등은 트랙 변경 없음
+    if (currentBgmSrc !== desired) {
+      bgm.pause();
+      bgm.src = desired;                   // 소스 교체
+      bgm.load();
+      currentBgmSrc = desired;
+    }
+    if (bgm.paused) {
+      bgm.play().then(() => setBgmUI(true)).catch(() => {});
+    }
   }
 
   bgmBtn.addEventListener("click", () => {
@@ -653,7 +677,7 @@
   // 페이지 로드 즉시 자동재생 시도 (대부분 브라우저에서 차단됨)
   playBgm();
 
-  // 첫 사용자 상호작용 시 즉시 재생
+  // 첫 사용자 상호작용 시 즉시 재생 (홈에서 상호작용해도 일단 letter1 트랙으로 시작)
   const interactionEvents = [
     "pointerdown", "pointermove", "mousedown", "mousemove",
     "wheel", "keydown", "touchstart", "scroll"
@@ -705,8 +729,8 @@
 
     if (name === "letter1" || name === "letter2") {
       setupReveals(name);
-      // 편지 진입 시 BGM 보장 (사용자 클릭/팝스테이트 모두 사용자 제스처로 간주됨)
-      playBgm();
+      // 편지 진입 시 해당 편지의 BGM으로 자동 전환 및 재생
+      playBgmForView(name);
     }
 
     if (!opts.fromPopState) {
@@ -719,7 +743,8 @@
 
   document.querySelectorAll(".letter-card").forEach((card) => {
     card.addEventListener("click", () => {
-      playBgm();                          // 카드 클릭은 항상 사용자 제스처 — 자동재생 정책 통과
+      // 카드 클릭은 사용자 제스처 — 자동재생 정책 통과 + 트랙 분기
+      playBgmForView(card.dataset.target);
       showView(card.dataset.target);
     });
   });
