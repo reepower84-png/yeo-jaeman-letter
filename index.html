@@ -274,15 +274,10 @@
     margin-top: 0.4rem;
   }
 
-  /* fade-in on scroll */
+  /* 편지 진입 시 모든 요소를 즉시 표시 — 클릭 즉시 글이 보이도록 (이전 1.2s 페이드 제거) */
   .reveal {
-    opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 1.2s ease, transform 1.2s ease;
-  }
-  .reveal.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 
   /* ===== 인용 강조 ===== */
@@ -697,30 +692,6 @@
   const backBtn = document.getElementById("backBtn");
   const VALID = ["home", "letter1", "letter2"];
 
-  let currentObserver = null;
-
-  function setupReveals(viewName) {
-    if (currentObserver) currentObserver.disconnect();
-    const viewEl = document.querySelector(".view-" + viewName);
-    if (!viewEl) return;
-    const reveals = viewEl.querySelectorAll(".reveal");
-    reveals.forEach((el) => el.classList.remove("visible"));
-
-    currentObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const idx = Array.from(reveals).indexOf(entry.target);
-            setTimeout(() => entry.target.classList.add("visible"), Math.min(idx * 40, 200));
-            currentObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -60px 0px" }
-    );
-    reveals.forEach((el) => currentObserver.observe(el));
-  }
-
   function showView(name, opts = {}) {
     if (!VALID.includes(name)) name = "home";
     body.classList.remove("home", "letter1", "letter2");
@@ -728,7 +699,6 @@
     window.scrollTo({ top: 0, behavior: "instant" });
 
     if (name === "letter1" || name === "letter2") {
-      setupReveals(name);
       // 편지 진입 시 해당 편지의 BGM으로 자동 전환 및 재생
       playBgmForView(name);
     }
