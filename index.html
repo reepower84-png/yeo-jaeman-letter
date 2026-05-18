@@ -64,20 +64,14 @@
   body.letter1 .view-letter1,
   body.letter2 .view-letter2 { display: block; }
 
-  /* 편지 진입 시 부드럽게 떠오르는 트랜지션 (PC·모바일 공통) */
+  /* 편지 진입 시 부드러운 페이드 (transform은 스크롤 좌표 계산과 충돌하므로 opacity만 사용) */
   @keyframes viewEnter {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; }
+    to   { opacity: 1; }
   }
   body.letter1 .view-letter1,
   body.letter2 .view-letter2 {
-    animation: viewEnter 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: viewEnter 0.4s ease both;
   }
   /* 모션 최소화 선호 사용자는 즉시 표시 */
   @media (prefers-reduced-motion: reduce) {
@@ -264,7 +258,7 @@
   .letter {
     max-width: 720px;
     margin: 0 auto;
-    padding: 4rem 2rem 6rem;
+    padding: 7rem 2rem 6rem;            /* top 여유 — 스크롤 이동이 잘 보이도록 */
   }
   .letter .salutation {
     font-family: "Nanum Pen Script", cursive;
@@ -272,6 +266,7 @@
     color: var(--warm-deep);
     margin-bottom: 2.4rem;
     text-align: left;
+    scroll-margin-top: 3rem;             /* scrollIntoView 도착 위치 — 뒤로가기 버튼 아래 여백 확보 */
   }
   .letter p {
     font-size: clamp(1.02rem, 1.25vw, 1.18rem);
@@ -332,8 +327,9 @@
   }
   @media (max-width: 600px) {
     body { line-height: 1.85; }
-    /* 편지 화면 상단: 뒤로가기 버튼(고정)과 겹치지 않도록 top 패딩 확보 */
-    .letter { padding: calc(4.4rem + env(safe-area-inset-top, 0)) 1.4rem 5rem; }
+    /* 편지 화면 상단: 뒤로가기 버튼(고정)과 겹치지 않도록 top 패딩 확보 + 스크롤 여유 */
+    .letter { padding: calc(7.5rem + env(safe-area-inset-top, 0)) 1.4rem 5rem; }
+    .letter .salutation { scroll-margin-top: 4.5rem; }
     .letter p {
       font-size: 1.08rem;
       text-align: left;
@@ -719,11 +715,24 @@
     if (!VALID.includes(name)) name = "home";
     body.classList.remove("home", "letter1", "letter2");
     body.classList.add(name);
-    window.scrollTo({ top: 0, behavior: "instant" });
 
     if (name === "letter1" || name === "letter2") {
-      // 편지 진입 시 해당 편지의 BGM으로 자동 전환 및 재생
+      // 편지 진입: 일단 페이지 맨 위로 즉시 이동(레이아웃 안정화) → 다음 프레임에서 인사말로 부드럽게 스크롤
+      window.scrollTo({ top: 0, behavior: "instant" });
       playBgmForView(name);
+      const prefersReducedMotion = window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      requestAnimationFrame(() => {
+        const sal = document.querySelector(".view-" + name + " .salutation");
+        if (sal) {
+          sal.scrollIntoView({
+            behavior: prefersReducedMotion ? "auto" : "smooth",
+            block: "start"
+          });
+        }
+      });
+    } else {
+      window.scrollTo({ top: 0, behavior: "instant" });
     }
 
     if (!opts.fromPopState) {
