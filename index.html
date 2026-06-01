@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>사람, 여재만 — 세 통의 편지</title>
+<title>사람, 여재만 — 네 통의 편지</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link
@@ -51,6 +51,9 @@
   body.letter3 .bg {
     background-image: url("images/20260525_184430.jpg");
   }
+  body.letter4 .bg {
+    background-image: url("images/20260514_174529.jpg");
+  }
   .bg::after {
     content: "";
     position: fixed;
@@ -66,7 +69,8 @@
   body.home    .view-home,
   body.letter1 .view-letter1,
   body.letter2 .view-letter2,
-  body.letter3 .view-letter3 { display: block; }
+  body.letter3 .view-letter3,
+  body.letter4 .view-letter4 { display: block; }
 
   /* 편지 진입 시 부드러운 페이드 (transform은 스크롤 좌표 계산과 충돌하므로 opacity만 사용) */
   @keyframes viewEnter {
@@ -75,14 +79,16 @@
   }
   body.letter1 .view-letter1,
   body.letter2 .view-letter2,
-  body.letter3 .view-letter3 {
+  body.letter3 .view-letter3,
+  body.letter4 .view-letter4 {
     animation: viewEnter 0.4s ease both;
   }
   /* 모션 최소화 선호 사용자는 즉시 표시 */
   @media (prefers-reduced-motion: reduce) {
     body.letter1 .view-letter1,
     body.letter2 .view-letter2,
-    body.letter3 .view-letter3 {
+    body.letter3 .view-letter3,
+    body.letter4 .view-letter4 {
       animation: none;
     }
   }
@@ -111,7 +117,8 @@
   }
   body.letter1 .back-btn,
   body.letter2 .back-btn,
-  body.letter3 .back-btn { display: inline-flex; }
+  body.letter3 .back-btn,
+  body.letter4 .back-btn { display: inline-flex; }
   .back-btn:hover {
     transform: translateX(-3px);
     box-shadow: 0 6px 24px rgba(43, 33, 24, 0.14);
@@ -406,7 +413,7 @@
 
 <!-- ===== 홈 ===== -->
 <section class="view view-home cover">
-  <p class="greeting">세 통의 편지를 전해드립니다</p>
+  <p class="greeting">네 통의 편지를 전해드립니다</p>
   <h1>사람, 여 재 만</h1>
   <p class="subtitle">현장에서 답을 찾아온 사람의 이야기</p>
   <div class="divider"></div>
@@ -427,6 +434,12 @@
       <div class="num">No. 03</div>
       <div class="label">여재만의 편지 3</div>
       <div class="hint">청년과 청소년, 외면하지 않는 정치</div>
+      <div class="arrow">읽어보기 →</div>
+    </button>
+    <button class="letter-card" type="button" data-target="letter4">
+      <div class="num">No. 04</div>
+      <div class="label">여재만의 편지 4</div>
+      <div class="hint">한 동네에 흐르는 세 개의 시간</div>
       <div class="arrow">읽어보기 →</div>
     </button>
   </div>
@@ -723,6 +736,93 @@
 
 </article>
 
+<!-- ===== 편지 4 ===== -->
+<article class="view view-letter4 letter">
+
+  <p class="salutation reveal">존경하고 사랑하는 계양 주민 여러분께,</p>
+
+  <p class="reveal">안녕하세요. 계양 토박이, 여재만입니다.</p>
+
+  <p class="reveal gap">
+    요즘 부쩍,<br />
+    한 집안에 흐르는 세 개의 시간이<br />
+    자주 마음에 걸립니다.
+  </p>
+
+  <p class="reveal">
+    경로당 문을 나서시는 어르신의 시간,<br />
+    아이를 어린이집에 맡기고 출근길을 재촉하는 워킹맘의 시간,<br />
+    그리고 작은 신혼집에서 내일을 그리는 젊은 부부의 시간.
+  </p>
+
+  <p class="reveal">
+    서로 다른 듯 보여도,<br />
+    결국 한 가족이 함께 살아가는<br />
+    같은 동네의 이야기입니다.
+  </p>
+
+  <p class="reveal gap">먼저 어르신들께 약속드립니다.</p>
+
+  <p class="reveal">
+    경로당이 더 따뜻하고 안전한 사랑방이 되도록,<br />
+    그리고 거동이 불편하셔도 가까운 곳에서<br />
+    건강을 챙기실 수 있도록<br />
+    <strong>돌봄과 의료의 손길</strong>을 촘촘히 잇겠습니다.
+  </p>
+
+  <p class="reveal">
+    평생 계양을 지켜오신 분들이<br />
+    노후만큼은 안심하실 수 있어야 합니다.
+  </p>
+
+  <p class="reveal gap">워킹맘과 일하는 부모님들께도 말씀드립니다.</p>
+
+  <p class="reveal">
+    아이를 맡길 곳이 마땅치 않아 발을 동동 구르는 일,<br />
+    퇴근 시간과 하원 시간이 어긋나 마음 졸이는 일 —<br />
+    이제는 동네가 함께 책임져야 합니다.
+  </p>
+
+  <p class="reveal">
+    믿고 맡길 수 있는 돌봄,<br />
+    일과 가정을 모두 지킬 수 있는 계양을 만들겠습니다.
+  </p>
+
+  <p class="reveal gap">
+    이제 막 살림을 시작한 신혼부부와<br />
+    혼자 사는 청년들께도 약속합니다.
+  </p>
+
+  <p class="reveal">
+    너무 큰 부담 없이 첫 보금자리를 마련하고,<br />
+    떠나지 않아도 되는 계양.
+  </p>
+
+  <p class="reveal">
+    시작하는 분들이 뿌리내릴 수 있어야<br />
+    우리 동네에 다음 세대가 이어집니다.
+  </p>
+
+  <div class="pull reveal">
+    세 개의 시간이 한 동네에서<br />
+    서로를 지켜줄 때,<br />
+    그곳이 바로 살 만한 도시입니다.
+  </div>
+
+  <p class="reveal gap">
+    8년 동안 현장에서 배운 경험으로,<br />
+    이 약속들을 말이 아닌 결과로 보여드리겠습니다.
+  </p>
+
+  <p class="reveal">여러분의 하루하루 곁에 있겠습니다.</p>
+
+  <div class="signature reveal">
+    여 재 만 올림
+    <small>계양을 사랑하는</small>
+  </div>
+
+</article>
+
 <footer>
   <p>© 사람, 여재만</p>
 </footer>
@@ -732,11 +832,13 @@
   // 편지별 BGM 분기
   //  - 편지 1: "Nostalgic Piano" (bgm.mp3) — 향수 어린 피아노
   //  - 편지 2: "Piano Reflections" by Ahjay Stelino (bgm2.mp3, Mixkit Free License) — 잔잔하고 감동적인 피아노
-  //  - 편지 3: 새로운 감동 BGM (bgm3.mp3) — 청년·청소년 메시지에 어울리는 잔잔한 곡
+  //  - 편지 3: "Possible Dreams" (bgm3.mp3) — 청년·청소년 메시지에 어울리는 잔잔한 곡
+  //  - 편지 4: "Heartwarming" by Kevin MacLeod (bgm4.mp3, incompetech.com, CC BY 4.0) — 세 세대(어르신·워킹맘·청년)의 시간을 감싸는 따뜻한 피아노
   const BGM_TRACKS = {
     letter1: "bgm.mp3",
     letter2: "bgm2.mp3",
-    letter3: "bgm3.mp3"
+    letter3: "bgm3.mp3",
+    letter4: "bgm4.mp3"
   };
 
   const bgm = document.getElementById("bgm");
@@ -803,7 +905,7 @@
     "wheel", "keydown", "touchstart", "scroll", "click"
   ];
   const autoPlayOnce = () => {
-    const activeLetter = ["letter1", "letter2", "letter3"]
+    const activeLetter = ["letter1", "letter2", "letter3", "letter4"]
       .find((v) => document.body.classList.contains(v));
     if (activeLetter) {
       playBgmForView(activeLetter);
@@ -821,14 +923,14 @@
   // ===== 뷰 전환 =====
   const body = document.body;
   const backBtn = document.getElementById("backBtn");
-  const VALID = ["home", "letter1", "letter2", "letter3"];
+  const VALID = ["home", "letter1", "letter2", "letter3", "letter4"];
 
   function showView(name, opts = {}) {
     if (!VALID.includes(name)) name = "home";
-    body.classList.remove("home", "letter1", "letter2", "letter3");
+    body.classList.remove("home", "letter1", "letter2", "letter3", "letter4");
     body.classList.add(name);
 
-    if (name === "letter1" || name === "letter2" || name === "letter3") {
+    if (name === "letter1" || name === "letter2" || name === "letter3" || name === "letter4") {
       // 편지 진입: 일단 페이지 맨 위로 즉시 이동(레이아웃 안정화) → 다음 프레임에서 인사말로 부드럽게 스크롤
       window.scrollTo({ top: 0, behavior: "instant" });
       playBgmForView(name);
@@ -873,7 +975,7 @@
   // 첫 진입: 해시가 있으면 해당 편지로 바로 이동
   (() => {
     const hash = (location.hash || "").replace("#", "");
-    if (hash === "letter1" || hash === "letter2" || hash === "letter3") {
+    if (hash === "letter1" || hash === "letter2" || hash === "letter3" || hash === "letter4") {
       showView(hash, { fromPopState: true });
     }
   })();
